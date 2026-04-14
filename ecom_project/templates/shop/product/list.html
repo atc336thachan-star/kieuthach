@@ -1,0 +1,84 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}
+    {% if category %}{{ category.name }}{% else %}Tất cả sản phẩm{% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Sidebar Danh mục -->
+    <div class="col-md-3 mb-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white fw-bold">
+                Danh mục
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item {% if not category %}active bg-warning border-warning text-dark{% endif %}">
+                    <a href="{% url 'shop:product_list' %}" class="text-decoration-none {% if not category %}text-dark fw-bold{% else %}text-primary-custom{% endif %}">
+                        Tất cả sản phẩm
+                    </a>
+                </li>
+                {% for c in categories %}
+                <li class="list-group-item {% if category.slug == c.slug %}active bg-warning border-warning text-dark{% endif %}">
+                    <a href="{{ c.get_absolute_url }}" class="text-decoration-none {% if category.slug == c.slug %}text-dark fw-bold{% else %}text-primary-custom{% endif %}">
+                        {{ c.name }}
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="col-md-9">
+        <h2 class="mb-4 text-primary-custom fw-bold">
+            {% if category %}{{ category.name }}{% else %}Sản phẩm mới nhất{% endif %}
+        </h2>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for product in products %}
+            <div class="col">
+                <div class="card h-100 shadow-sm border-0 product-card">
+                    <a href="{{ product.get_absolute_url }}">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+                        {% else %}
+                            <div class="card-img-top d-flex align-items-center justify-content-center bg-light text-muted" style="height: 200px;">
+                                No image
+                            </div>
+                        {% endif %}
+                    </a>
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">
+                            <a href="{{ product.get_absolute_url }}" class="text-decoration-none text-dark">{{ product.name }}</a>
+                        </h5>
+                        <p class="card-text text-danger fw-bold fs-5 mt-auto mb-3">{{ product.price }} VNĐ</p>
+                        
+                        <form action="{% url 'cart:cart_add' product.id %}" method="post" class="mt-auto">
+                            {% csrf_token %}
+                            {{ cart_product_form }}
+                            <input type="hidden" name="quantity" value="1">
+                            <input type="hidden" name="override" value="False">
+                            <button type="submit" class="btn btn-warning w-100">Thêm vào giỏ</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <p class="text-muted">Không có sản phẩm nào trong danh mục này.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .product-card {
+        transition: transform 0.3s;
+    }
+    .product-card:hover {
+        transform: translateY(-5px);
+    }
+</style>
+{% endblock %}

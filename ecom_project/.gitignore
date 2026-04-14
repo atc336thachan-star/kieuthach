@@ -1,0 +1,12 @@
+# Python environment 
+venv/ 
+.venv/ 
+__pycache__/ 
+*.pyc 
+# AI Agent / Framework temp files 
+.anti-gravity/ 
+logs/ 
+*.log 
+# OS files 
+.DS_Store 
+Thumbs.db

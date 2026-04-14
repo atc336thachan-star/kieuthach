@@ -1,0 +1,26 @@
+{% extends "shop/base.html" %}
+
+{% block title %}Đăng xuất - E-comStore{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm border-0 mt-5">
+            <div class="card-header bg-white border-0 text-center pt-4 pb-0">
+                <h3 class="text-primary-custom fw-bold">Đăng xuất</h3>
+            </div>
+            <div class="card-body p-4 text-center">
+                <p>Bạn có chắc chắn muốn đăng xuất khỏi hệ thống?</p>
+                <form method="post" action="{% url 'account_logout' %}">
+                    {% csrf_token %}
+                    {% if redirect_field_value %}
+                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                    {% endif %}
+                    <button class="btn btn-warning fw-bold px-4 py-2 mt-3" type="submit">Xác nhận đăng xuất</button>
+                    <a href="/" class="btn btn-outline-secondary px-4 py-2 mt-3 ms-2">Hủy</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

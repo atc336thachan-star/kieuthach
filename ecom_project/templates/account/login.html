@@ -1,0 +1,57 @@
+{% extends 'shop/base.html' %}
+
+{% block title %}Đăng nhập - E-comStore{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-sm border-0 mt-5">
+            <div class="card-header bg-white border-0 text-center pt-4 pb-0">
+                <h3 class="text-primary-custom fw-bold">Đăng nhập</h3>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="{% url 'account_login' %}">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    
+                    {% if redirect_field_value %}
+                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                    {% endif %}
+                    
+                    <button class="btn btn-warning w-100 fw-bold py-2 mb-3 mt-2" type="submit">Đăng nhập</button>
+                    <a class="text-decoration-none d-block text-center mb-3 text-muted" href="{% url 'account_reset_password' %}">Quên mật khẩu?</a>
+                </form>
+            </div>
+            <div class="card-footer bg-white border-0 text-center pb-4">
+                <span>Chưa có tài khoản?</span>
+                <a href="{% url 'account_signup' %}" class="text-primary-custom fw-bold text-decoration-none">Đăng ký ngay</a>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .card-body p { margin-bottom: 1rem; }
+    .card-body label { display: block; margin-bottom: .5rem; font-weight: 500;}
+    .card-body input { 
+        display: block; 
+        width: 100%; 
+        padding: .375rem .75rem; 
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        appearance: none;
+        border-radius: .375rem;
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    }
+    .card-body input:focus {
+        border-color: #86b7fe;
+        outline: 0;
+        box-shadow: 0 0 0 .25rem rgba(13,110,253,.25);
+    }
+    .card-body ul.errorlist { color: #dc3545; padding-left: 0; list-style: none; font-size: 0.875rem; }
+</style>
+{% endblock %}

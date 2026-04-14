@@ -1,0 +1,46 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}
+  {{ product.name }}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-5 mb-4">
+        <div class="card border-0 shadow-sm">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" class="card-img-top img-fluid rounded" alt="{{ product.name }}">
+            {% else %}
+                <div class="card-img-top d-flex align-items-center justify-content-center bg-light text-muted rounded" style="height: 400px;">
+                    No image
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="col-md-7">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'shop:product_list' %}">Tất cả sản phẩm</a></li>
+                <li class="breadcrumb-item"><a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ product.name }}</li>
+            </ol>
+        </nav>
+        
+        <h1 class="text-primary-custom fw-bold mb-3">{{ product.name }}</h1>
+        <h2 class="text-danger fw-bold mb-4">{{ product.price }} VNĐ</h2>
+        
+        <form action="{% url 'cart:cart_add' product.id %}" method="post" class="mb-4 bg-light p-4 rounded d-inline-block shadow-sm">
+            {{ cart_product_form }}
+            {% csrf_token %}
+            <button class="btn btn-warning fw-bold ms-3" type="submit">🛒 Thêm vào giỏ hàng</button>
+        </form>
+        
+        <div class="mt-4">
+            <h4 class="fw-bold">Mô tả sản phẩm</h4>
+            <p>{{ product.description|linebreaks }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

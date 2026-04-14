@@ -1,0 +1,75 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}
+  Giỏ hàng của bạn
+{% endblock %}
+
+{% block content %}
+<h1 class="text-primary-custom fw-bold mb-4">Giỏ hàng của bạn</h1>
+
+{% if cart|length > 0 %}
+<div class="table-responsive shadow-sm rounded">
+    <table class="table table-hover align-middle mb-0 text-center">
+        <thead class="table-primary text-white">
+            <tr>
+                <th>Ảnh</th>
+                <th>Sản phẩm</th>
+                <th>Số lượng</th>
+                <th>Xóa</th>
+                <th>Đơn giá</th>
+                <th>Thành tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart %}
+            {% with product=item.product %}
+            <tr>
+                <td style="width: 100px;">
+                    <a href="{{ product.get_absolute_url }}">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded" style="max-height: 80px;">
+                        {% else %}
+                        <div class="bg-light text-muted d-flex align-items-center justify-content-center border rounded" style="width: 80px; height: 80px;">No image</div>
+                        {% endif %}
+                    </a>
+                </td>
+                <td class="text-start text-dark fw-bold">{{ product.name }}</td>
+                <td>
+                    <form action="{% url 'cart:cart_add' product.id %}" method="post" class="d-flex justify-content-center align-items-center">
+                        {{ item.update_quantity_form.quantity }}
+                        {{ item.update_quantity_form.override }}
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-primary ms-2">Cập nhật</button>
+                    </form>
+                </td>
+                <td>
+                    <form action="{% url 'cart:cart_remove' product.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
+                    </form>
+                </td>
+                <td class="text-danger fw-bold">{{ item.price }} VNĐ</td>
+                <td class="text-danger fw-bold fs-5">{{ item.total_price }} VNĐ</td>
+            </tr>
+            {% endwith %}
+            {% endfor %}
+            <tr class="table-light">
+                <td colspan="4" class="text-end fw-bold fs-5">Tổng cộng</td>
+                <td colspan="2" class="text-danger fw-bold fs-4">{{ cart.get_total_price }} VNĐ</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="d-flex justify-content-between mt-4">
+    <a href="{% url 'shop:product_list' %}" class="btn btn-outline-primary fw-bold">← Tiếp tục mua sắm</a>
+    <a href="#" class="btn btn-warning fw-bold fs-5 px-5">Thanh toán →</a>
+</div>
+{% else %}
+<div class="alert alert-info text-center py-5">
+    <h3 class="fw-bold mb-3">Giỏ hàng của bạn đang trống!</h3>
+    <a href="{% url 'shop:product_list' %}" class="btn btn-primary fw-bold">Khám phá sản phẩm ngay</a>
+</div>
+{% endif %}
+{% endblock %}
